@@ -8,7 +8,7 @@ public class BackResult<T> {
 	public int total;     //总记录数  
     public List<T> rows;  //数据列表  
 	public int getTotal() {
-		return total;
+		return total; 
 	}
 	public void setTotal(int total) {
 		this.total = total;
