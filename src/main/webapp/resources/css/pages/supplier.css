@@ -1,0 +1,51 @@
+.editSupplier{
+	cursor: pointer;
+}
+.deleteSupplier{
+	cursor: pointer;
+}
+
+
+.warning{
+	border:1px solid red;
+}
+#addSupplier span{
+	color:red;
+}
+#addSupplier p{
+	margin-bottom: 5px;
+}
+#addSupplier input{
+	width: 200px;
+	height: 25px;
+}
+
+
+
+.supplierName{
+	height: 37px;
+	width: 160px;
+	border:1px solid #e7e7e7;
+}
+
+#supplier_supplier{
+	height: 37px;
+	width: 160px;
+	border-color: #e7e7e7;
+}
+
+
+#toolbar_supplier select{
+	/* background-color: rgba(0, 0, 0, 0.4); */
+	color: #96adb6;
+}
+#toolbar_supplier text{
+	/* background-color: rgba(0, 0, 0, 0.4); */
+	color: #96adb6;
+}
+
+#toolbar_supplier span{
+	color:#96adb6;
+}
+
+

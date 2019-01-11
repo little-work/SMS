@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+    
+    <!-- 加载配置文件 -->  
+   <!-- <util:properties id="redis" location="classpath:redis.properties" /> -->
+   <beans:bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"> 
+        <beans:property name="maxIdle" value="1" /> 
+        <beans:property name="maxTotal" value="5" /> 
+        <beans:property name="blockWhenExhausted" value="true" /> 
+        <beans:property name="maxWaitMillis" value="30000" /> 
+        <beans:property name="testOnBorrow" value="true" />  
+    </beans:bean> 
+
+    <beans:bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"> 
+        <beans:property name="hostName" value="127.0.0.1" /> 
+        <beans:property name="port" value="6379"/> 
+        <beans:property name="poolConfig" ref="jedisPoolConfig" /> 
+        <beans:property name="usePool" value="true"/> 
+    </beans:bean> 
+
+    <!-- redis template definition -->
+    <beans:bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <beans:property name="connectionFactory" ref="jedisConnectionFactory" />
+        <beans:property name="keySerializer">
+            <beans:bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </beans:property>
+        <beans:property name="valueSerializer">
+            <beans:bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </beans:property>
+        <beans:property name="hashKeySerializer">
+            <beans:bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </beans:property>
+        <beans:property name="hashValueSerializer">
+            <beans:bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </beans:property>
+         <!--开启事务  -->  
+        <beans:property name="enableTransactionSupport" value="true"></beans:property>  
+    </beans:bean>
+    
+   <!--自定义redis工具类,在需要缓存的地方注入此类  -->  
+  <beans:bean id="redisrCacheManager" class="com.alibaba.wms.util.RedisCacheManager">  
+        <beans:property name="redisTemplate" ref="redisTemplate" />  
+    </beans:bean> 
+    
+    
+    
+</beans:beans>

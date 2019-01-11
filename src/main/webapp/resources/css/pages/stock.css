@@ -1,0 +1,41 @@
+.editGoods{
+	cursor: pointer;
+}
+.deleteGoods{
+	cursor: pointer;
+}
+
+#addGoods input{
+	width: 200px;
+	height: 25px;
+}
+#addGoods span{
+	color:red;	
+}
+
+#addGoods p{
+	margin-bottom: 5px;
+}
+.warning{
+	border:1px solid red;
+}
+#GoodsType{
+	height: 37px;
+	width: 160px;
+	border-color: #e7e7e7;
+}
+#Supplier{
+	height: 37px;
+	width: 160px;
+	border-color: #e7e7e7;
+}
+
+#toolbar_stock button{
+	color: #96adb6;
+}
+#toolbar_stock select{
+	color: #96adb6;
+}
+#toolbar_stock span{
+	color:#96adb6;
+}

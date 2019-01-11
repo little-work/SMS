@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.alibaba.wms.dao.LoginRegistDao">
+		
+		<select id="checkUser" parameterType="String" resultType="com.alibaba.wms.bean.User">
+			select user_name,user_pwd,user_phone,user_id,role_id from TBL_USER_INFO  where user_name=#{username} and user_pwd=#{password}
+		</select>
+		
+		<select id="websocketGetData"  resultType="com.alibaba.wms.bean.TestsssBean">
+			select id,username,age from tutorials_tbl
+		</select>
+		
+		<select id="countNum"  resultType="int">
+			select count(1) from tutorials_tbl
+		</select>
+		
+		
+	
+</mapper>

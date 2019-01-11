@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+	
+	 <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.alibaba.wms" />
+	
+	 <!-- 配置拦截器    如果有多个拦截器会按照配置的先后顺序来执行的-->
+ 		<mvc:interceptors>
+	    	<mvc:interceptor>
+	    	    <!-- 拦截路径   /**表示拦截所有路劲 -->
+	    		<mvc:mapping path="/main" />
+	           <!--  <mvc:exclude-mapping path="/login" />
+	           	<mvc:exclude-mapping path="/toLogin"/> -->
+	            <beans:bean class="com.alibaba.wms.interceptor.SessionInterceptor"/>
+	    	</mvc:interceptor>
+    	</mvc:interceptors>
+    	
+    	
+	<!-- 从配置文件中读取连接诶的信息 -->
+	<util:properties id="config" location="classpath:mysql.properties" />
+	<!-- 配置连接池 -->
+	<beans:bean id="ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<beans:property name="driverClassName" value="#{config.driverClassName}" />
+		<beans:property name="url" value="#{config.url}" />
+		<beans:property name="username" value="#{config.username}" />
+		<beans:property name="password" value="#{config.password}" />
+		<beans:property name="initialSize" value="5" /><!-- 在启动连接池初始创建的数据库连接，默认为0 -->
+    	<beans:property name="maxActive" value="15" /><!-- 设置数据库同一时间的最大活跃连接默认为8，负数表示不闲置 -->
+    	<beans:property name="maxIdle" value="10"/><!-- 在连接池空闲时的最大连接数，超过的会被释放，默认为8，负数表示不闲置 -->
+    	<beans:property name="minIdle" value="2" /><!-- 空闲时的最小连接数，低于这个数量会创建新连接，默认为0 -->
+    	<beans:property name="maxWait" value="10000" />
+	</beans:bean>
+
+
+	<!-- 配置SqlSessionFactory -->
+	<beans:bean id="ssfb" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 注入连接池，不在使用mybatis自带的连接池 是使用spring配置的连接池 -->
+		<beans:property name="dataSource" ref="ds"></beans:property>
+		<!-- 映射文件的位置 -->
+		<beans:property name="mapperLocations" value="classpath:mapper/*.xml" />
+	</beans:bean>
+
+	<!-- 配置MapperScannerConfigurer 他会负责扫描指定包下面的所有的Mapper映射器 然后生成符合这些接口要求的对象（其实即使调用session的getMapper方法）自动帮我们实现 
+		这个接口 另外还会将这些对象添加spring容器里面（默认的id是首字母小写之后的接口名,也可以使用 @Respository来设置id） -->
+	<beans:bean id="mapperSource" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 指定Mapper映射器所在的包 -->
+		<beans:property name="basePackage" value="com.alibaba.wms.dao"></beans:property>
+	</beans:bean>
+	
+	
+	
+	
+</beans:beans>

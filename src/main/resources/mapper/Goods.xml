@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.alibaba.wms.dao.GoodsDao">
+
+	
+	
+	<select id="queryAllGoods"  resultType="com.alibaba.wms.bean.GoodsInfo">
+		select goods_id,goods_name,tgi.goods_type_code,goods_number,
+		goods_price,goods_supplier,store_time,update_time,goods_type_name 
+        from TBL_GOODS_INFO tgi,tbl_goods_category  tgc
+        where tgi.goods_type_code=tgc.goods_type_code;
+	</select>
+	
+	<select id="queryGoodsByCondition" parameterType="com.alibaba.wms.bean.GoodsInfo" resultType="com.alibaba.wms.bean.GoodsInfo">
+		select goods_id,goods_name,tgi.goods_type_code,goods_number,
+		goods_price,goods_supplier,store_time,update_time,goods_type_name 
+        from TBL_GOODS_INFO tgi,tbl_goods_category  tgc
+        <where>
+       		tgi.goods_type_code=tgc.goods_type_code
+        	<if test="store_time !=null and store_time!=''">
+        		and store_time LIKE CONCAT(CONCAT('%',#{store_time}),'%')
+        	</if>
+        	<if test="goods_supplier !=null and goods_supplier!=''">
+        		and goods_supplier=#{goods_supplier}
+        	</if>
+        	<if test="goods_type_code !=000 and goods_type_code!=0">
+        		and tgi.goods_type_code=#{goods_type_code}
+        	</if>
+        </where>
+	</select>
+	
+	<select id="queryAllGoodsType"  resultType="com.alibaba.wms.bean.GoodsType">
+		select goods_type_code,goods_type_name,parent_code,goods_level from tbl_goods_category;
+	</select>
+	
+	<select id="queryAllSupplier"  resultType="com.alibaba.wms.bean.Supplier">
+		select supplier_name,contacts,contacts_phone,entry_time from tbl_goods_supplier;
+	</select>
+	
+	
+	<insert id="batchInsertGoods">
+	    INSERT INTO test
+	            (username,pwd)
+	    VALUES
+	    <foreach collection ="list" item="user" separator =",">
+	         (#{user.username}, #{user.pwd})
+	    </foreach >
+	</insert>
+	
+	<insert id="addGoods" parameterType="com.alibaba.wms.bean.GoodsInfo">
+		
+		insert into TBL_GOODS_INFO 
+		(goods_id,goods_name,goods_type_code,goods_number,goods_price,goods_supplier,store_time,update_time) 
+		values(#{goods_id},#{goods_name},#{goods_type_code},#{goods_number},#{goods_price},#{goods_supplier},
+		from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s'),
+		from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s'))
+		
+	</insert>
+	
+	<update id="editGoods" parameterType="com.alibaba.wms.bean.GoodsInfo">
+		update TBL_GOODS_INFO set goods_name=#{goods_name},goods_type_code=#{goods_type_code},goods_number=#{goods_number},
+			goods_supplier=#{goods_supplier},goods_price=#{goods_price},update_time=from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s')
+			<where>
+				goods_id=#{goods_id}
+			</where>
+	</update>
+	
+	<delete id="deleteGoods" parameterType="String">
+		delete from TBL_GOODS_INFO where goods_id=#{goodsid}
+	
+	</delete>
+	
+	
+	
+	
+	<insert id="insertWebSession" parameterType="com.alibaba.wms.bean.WebSession">
+		insert into tbl_websession (session_id,ip,timeout,op_name,login_time)
+		values(#{session_id},#{IP},#{timeout},#{op_name},#{login_time})
+	
+	</insert>
+	
+	<select id="countWebSession" resultType="int" parameterType="String">
+		select count(1) from tbl_websession where op_name=#{opname}
+	</select>
+	
+	
+	<delete id="deleteWebSession" parameterType="String">
+		delete from tbl_websession where op_name=#{opname}
+	</delete>
+	
+	<insert id="insertLog" parameterType="com.alibaba.wms.bean.Log">
+		insert into tbl_log (log_serial,user_ip,record_time,user_name,record_status,op_name)
+		values (#{log_serial},#{user_ip},#{record_time},#{user_name},#{record_status},#{op_name})
+	</insert>
+	
+	
+
+</mapper>
+

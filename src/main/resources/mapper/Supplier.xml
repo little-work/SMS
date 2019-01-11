@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.alibaba.wms.dao.SupplierDao">
+
+	<select id="queryAllSupplier" resultType="com.alibaba.wms.bean.Supplier">
+		select supplier_name,contacts,contacts_phone,entry_time,supplier_id from tbl_goods_supplier;
+	
+	</select>
+
+	<insert id="addSupplier" parameterType="com.alibaba.wms.bean.Supplier">
+		insert into tbl_goods_supplier (supplier_name,contacts,contacts_phone,entry_time,supplier_id) values
+		(#{supplier_name},#{contacts},#{contacts_phone},
+		from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s'),
+		#{supplier_id})
+	</insert>
+
+	<update id="editSupplier" parameterType="com.alibaba.wms.bean.Supplier">
+		update tbl_goods_supplier set supplier_name=#{supplier_name},contacts=#{contacts},
+		contacts_phone=#{contacts_phone}
+		<where>
+				supplier_id=#{supplier_id}
+		</where>
+	</update>
+
+	<delete id="deleteSupplier" parameterType="String">
+		delete from tbl_goods_supplier where supplier_id=#{supplierID}
+	</delete>
+
+	<select id="querySupplierByCondition" parameterType="com.alibaba.wms.bean.Supplier" resultType="com.alibaba.wms.bean.Supplier">
+		select supplier_name,contacts,contacts_phone,entry_time,supplier_id
+        from tbl_goods_supplier
+        <where>
+        	<if test="entry_time !=null and entry_time!=''">
+        		and entry_time LIKE CONCAT(CONCAT('%',#{entry_time}),'%')
+        	</if>
+        	<if test="contacts !=null and contacts!=''">
+        		and contacts=#{contacts}
+        	</if>
+        	<if test="supplier_name !=null and supplier_name!=''">
+        		and supplier_name=#{supplier_name}
+        	</if>
+        </where>
+	</select>
+
+</mapper>

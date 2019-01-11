@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.alibaba.wms.dao.OpenCourseDao">
+		
+		<select id="queryAllOpenedCourse"  resultType="com.alibaba.wms.bean.OpenCourse">
+			select course_id,course_type,course_time,course_class,course_name,class_hour,course_teacher,  			
+					course_detail,if_package,pachage_name,create_time,update_time
+				from  tbl_course
+		</select>
+		
+		
+		
+		<insert id="addCourse" parameterType="com.alibaba.wms.bean.OpenCourse">
+			insert into tbl_course (course_id,course_type,course_time,course_class,course_name,class_hour,course_teacher,
+			course_detail,if_package,pachage_name,create_time,update_time) values(#{course_id},#{course_type},#{course_time},#{course_class},
+			#{course_name},#{class_hour},#{course_teacher},#{course_detail},#{if_package},#{pachage_name},from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s'),
+			from_unixtime(unix_timestamp(now()),'%Y-%m-%d %H:%i:%s'))
+		</insert>
+		
+		<insert id="addCost" parameterType="com.alibaba.wms.bean.Cost">
+			insert into tbl_cost (course_id,course_cost_stud,course_cost_teach,course_discount,
+			course_activity,course_cost_total_stud,course_cost_total_teach,actual_cost_stud) values (#{course_id},
+			#{course_cost_stud},#{course_cost_teach},#{course_discount},#{course_activity},#{course_cost_total_stud},
+			#{course_cost_total_teach},#{actual_cost_stud})
+		</insert>
+		
+		
+	
+</mapper>

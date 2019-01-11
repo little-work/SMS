@@ -1,0 +1,26 @@
+.courses{
+	width: 690px;
+	height: 470px;
+	border:1px solid #d4d4d4;
+}
+.course1{
+	width: 344px;
+	height: 470px;
+	border-right:1px solid #d4d4d4;
+	float: left;
+}
+.course2{
+	width: 344px;
+	height:460px;
+	border-left:1px solid #d4d4d4;
+	float: left;
+}
+.courses p{
+	margin-bottom: 10px;
+}
+#toolbar_openCourse span{
+	color: #96adb6;
+}
+
+
+
